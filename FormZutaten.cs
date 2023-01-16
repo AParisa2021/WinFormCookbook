@@ -17,42 +17,42 @@ namespace WinFormCookbook
     {
         List<Zutat> zutaten = new List<Zutat>();
         public TextBox[] txtZutat = new TextBox[18];
+
+        //initialize main object
+        Rezepte rezepte = new Rezepte();
+       
         public FormZutaten()
         {
             InitializeComponent();
-            
+            loadRecipes();
         }
 
         private void FormZutaten_Load(object sender, EventArgs e)
         {
-            //TextBox[] txtZutat = new TextBox[] {textBox1, textBox6, textBox10, textBox13, textBox16, textBox19, textBox22, textBox25, textBox28,
-            //textBox55, textBox52, textBox49, textBox46, textBox43, textBox40, textBox37, textBox34, textBox31};
 
-            //string zutaten = "";
-            //for(int i = 0; i < zutaten.Length; i++)
-            //{
-            //    txtZutat[i].Text = zutaten[i].ToString();
-            //}
+        }
 
-
+        private void loadRecipes()
+        {
+            using (FileStream file = new FileStream("Rezepte.xml", FileMode.Open, FileAccess.Read))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(Rezepte));
+                this.rezepte = (Rezepte) serializer.Deserialize(file);
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            Rezepte rezepte = new Rezepte();
+          
 
             //add new recipe
             Rezept neuRezept = new Rezept();
-            neuRezept.Name = txtName.Text; //todo: create methods to fill object, you cannot use Parameters
-            rezepte.rezepte.Add(neuRezept);     //KLasse Rezepte.Liste aus Klasse rezepte
+            neuRezept.Name = txtName.Text;
+            rezepte.rezepte.Add(neuRezept);     
 
 
-            //Rezept Suppe
-            //Rezept suppe = new Rezept();
-            //suppe.Name = "Suppe";
-            //suppe.ID = 100;
-            //rezepte.rezepte.Add(suppe);
-            //write and serialize
+
+            //write to xml
             using (FileStream file = new FileStream("Rezepte.xml", FileMode.Open, FileAccess.Write))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(Rezepte));
